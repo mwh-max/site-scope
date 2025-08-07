@@ -29,6 +29,10 @@ It’s also part of a larger goal to build tools for people in physical work env
 - Threshold adjustments
 - Cloud sync or team logging
 
+## Privacy
+
+SiteScope doesn’t record or store any audio. It reads microphone levels in real time, entirely on your device.
+
 ## Status
 
 Version 1.0 — everything works as intended. I’m keeping the scope small for now before adding more features.
