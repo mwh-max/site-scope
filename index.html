@@ -3,58 +3,62 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&display=swap"
+      rel="stylesheet"
+    />
+
     <title>SiteScope: Noise & Vibration Logger</title>
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header>
       <h1>SiteScope</h1>
-      <p>Live Noise And Vibration Monitor</p>
     </header>
 
     <main>
-      <p id="runtime">Monitoring for: 0:00</p>
-
-      <section class="intro">
-        <p>
-          SiteScope turns your phone or tablet into a real-time noise and
-          vibration monitor. It's built for worksites, warehouses or anywhere
-          you need to check if levels are too high. Your mic and motion sensors
-          are used to log spikes, and you can export the log when you're done.
-        </p>
-      </section>
-
-      <section class="scale-bar">
-        <div class="bar green"></div>
-        <div class="bar yellow"></div>
-        <div class="bar red"></div>
-      </section>
-
-      <section class="readings">
-        <div class="reading">
-          <h2>Noise Level</h2>
-          <p id="noiseLevel">-- dB</p>
+      <section class="panel">
+        <div class="panel-header">
+          <section class="intro">
+            <p>
+              Turn your phone or tablet into a live noise and vibration monitor.
+              SiteScope is built for worksites, warehouses or anywhere you need
+              to know when levels get too high. It logs spikes using your mic
+              and motion sensors and lets you export the results when you're
+              done.
+            </p>
+          </section>
+          <p id="runtime">Monitoring for: 0:00</p>
+          <div class="scale-bar">
+            <div class="bar green"></div>
+            <div class="bar yellow"></div>
+            <div class="bar red"></div>
+          </div>
         </div>
-        <div class="reading">
-          <h2>Vibration</h2>
-          <p id="vibrationLevel">--</p>
-        </div>
-      </section>
 
-      <section class="log-section">
-        <h3>Event Log</h3>
-        <ul id="logList"></ul>
-        <div class="filters">
-          <button onclick="filterLogs('all')">All</button>
-          <button onclick="filterLogs('Noise')">Noise</button>
-          <button onclick="filterLogs('Vibration')">Vibration</button>
+        <div class="readings">
+          <div class="reading">
+            <h2>Noise Level</h2>
+            <p id="noiseLevel">-- dB</p>
+          </div>
+          <div class="reading">
+            <h2>Vibration</h2>
+            <p id="vibrationLevel">--</p>
+          </div>
+        </div>
+
+        <div class="log-section">
+          <h3>Event Log</h3>
+          <ul id="logList"></ul>
+          <div class="filters">
+            <button onclick="filterLogs('all')">All</button>
+            <button onclick="filterLogs('Noise')">Noise</button>
+            <button onclick="filterLogs('Vibration')">Vibration</button>
+            <button id="exportBtn">Export Log</button>
+          </div>
         </div>
       </section>
     </main>
-
-    <footer>
-      <button id="exportBtn">Export Log</button>
-    </footer>
 
     <script src="script.js"></script>
   </body>

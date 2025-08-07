@@ -49,24 +49,65 @@ async function startNoiseMonitoring() {
 }
 
 function startVibrationMonitoring() {
+  vibrationDisplay.textContent = "-- m/s²";
   if (window.DeviceMotionEvent) {
-    window.addEventListener("devicemotion", (event) => {
-      const acc = event.accelerationIncludingGravity;
-      if (!acc) return;
-
-      const totalAccel = Math.sqrt(
-        acc.x ** 2 + acc.y ** 2 + acc.z ** 2
-      ).toFixed(2);
-
-      vibrationDisplay.textContent = ` ${totalAccel} m/s²`;
-
-      if (totalAccel > 15) {
-        addToLog(`⚠️ High vibration: ${totalAccel} m/s²`);
-      }
-    });
+    if (typeof DeviceMotionEvent.requestPermission === "function") {
+      // iOS requires permission
+      DeviceMotionEvent.requestPermission()
+        .then((permissionState) => {
+          if (permissionState === "granted") {
+            window.addEventListener("devicemotion", handleMotion);
+          } else {
+            vibrationDisplay.textContent = "Permission denied";
+          }
+        })
+        .catch((err) => {
+          console.error("Permission error:", err);
+          vibrationDisplay.textContent = "Permission error";
+        });
+    } else {
+      // Android / desktop browsers
+      window.addEventListener("devicemotion", handleMotion);
+    }
   } else {
     vibrationDisplay.textContent = "Not supported";
     console.warn("Accelerometer not supported on this device.");
+  }
+}
+
+let lastVibrationLogTime = 0;
+
+function handleMotion(event) {
+  try {
+    const acc = event.accelerationIncludingGravity;
+
+    // Check for undefined or null
+    if (!acc || acc.x === null || acc.y === null || acc.z === null) {
+      vibrationDisplay.textContent = "Waiting for data...";
+      return;
+    }
+
+    // Calculate total acceleration
+    const totalAccel = Math.sqrt(acc.x ** 2 + acc.y ** 2 + acc.z ** 2);
+
+    // Check for invalid math result
+    if (isNaN(totalAccel)) {
+      vibrationDisplay.textContent = "Invalid sensor data";
+      return;
+    }
+
+    const formattedAccel = totalAccel.toFixed(2);
+    vibrationDisplay.textContent = `${formattedAccel} m/s²`;
+
+    // Debounce log entries to avoid spam
+    const now = Date.now();
+    if (totalAccel > 15 && now - lastVibrationLogTime > 3000) {
+      addToLog(`⚠️ High vibration: ${formattedAccel} m/s²`);
+      lastVibrationLogTime = now;
+    }
+  } catch (err) {
+    console.error("Vibration error:", err);
+    vibrationDisplay.textContent = "Sensor error";
   }
 }
 
